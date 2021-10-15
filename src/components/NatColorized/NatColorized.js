@@ -2,18 +2,17 @@ import React from "react";
 import { Box } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { NATIONALITIES_HUMANE_NAME } from "../../constants/nationality";
-import theme from "../../constants/theme";
 
 const useStyles = makeStyles((theme) => {
   return createStyles({
     root: {
       display: "flex",
       padding: "3px 5px",
-      letterSpacing: "0.1rem",
+      letterSpacing: "0.2rem",
       alignItems: "center",
+      fontWeight: 700,
       color: theme.grey[100],
       textTransform: "lowercase",
-      textShadow: theme.shadow.main,
       background: ({ color }) => `${theme.natColor[color]}`,
       borderRadius: 3,
     },

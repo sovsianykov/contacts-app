@@ -3,12 +3,13 @@ import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useContacts } from "../../hooc/useContacts";
-import {Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {Container, Typography} from "@mui/material";
 import { createStyles } from "@mui/styles";
 import ContactTable from "./ContactTable";
 import ToggleDataViewMode from "../../components/ToggleDataViewMode";
 import { DATA_VIEW_MODES } from "../../constants/constants";
 import { useDataViewMode } from "./useDataViewMod";
+import ContentFilters from "../../components/ContentFilters";
 
 const useStyles = makeStyles((theme) => {
   return createStyles({
@@ -26,17 +27,23 @@ const useStyles = makeStyles((theme) => {
   });
 });
 
-const filtersDefaultData = { fullname: "" , gender: "All"};
+const filtersDefaultData = { fullname: "" , gender: "All", nationality: "All"};
 //
 const filterByFullName = ({ first, last }, fullname ) =>
   first?.toLowerCase().includes(fullname.toLowerCase()) ||
      last?.toLowerCase().includes(fullname.toLowerCase())
 
-const filterByGender = (gender,filterGender) => {
+const filterByGender = (gender, filterGender) => {
   if  (filterGender === "All" ) {
     return true;
   }
   return gender === filterGender || gender === ""
+}
+const filterByNationality = (nationality, filterNationality) => {
+  if  (filterNationality === "All" ) {
+    return true;
+  }
+  return nationality === filterNationality || nationality === ""
 }
 
 
@@ -46,16 +53,17 @@ const Contacts = () => {
   const [dataViewMode, setDataViewMode] = useDataViewMode();
   const [filters, setFilters] = useState(filtersDefaultData);
 
-  const handleChangeFilter = (event) => {
+  const updateFilter = (name, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [event.target.name]: event.target.value,
+      [name]: value,
     }));
   };
 
   const filteredContacts = data&&data
       .filter((c) => filterByFullName(c.name, filters.fullname))
       .filter((c) => filterByGender(c.gender, filters.gender))
+      .filter((c) => filterByNationality(c.nat, filters.nationality))
   console.log("filteredContacts",filteredContacts)
   return (
     <Container className={classes.root}>
@@ -75,31 +83,7 @@ const Contacts = () => {
                 dataViewMode={dataViewMode}
               />
             </Box>
-            <Box display="flex">
-              <TextField
-                name="fullname"
-                label="Fullname"
-                value={filters.fullname}
-                variant="outlined"
-                size="small"
-                onChange={handleChangeFilter}
-              />
-              <FormControl className={classes.fieldGender} >
-                <InputLabel id="demo">Gender</InputLabel>
-                <Select
-                    size='small'
-                    id="demo"
-                    name="gender"
-                    value={filters.gender}
-                    label="Gender"
-                    onChange={handleChangeFilter}
-                >
-                  <MenuItem  value={'All'}>All</MenuItem>
-                  <MenuItem value={"male"}>male</MenuItem>
-                  <MenuItem value={"female"}>female</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+           <ContentFilters filters={filters} updateFilter={updateFilter}/>
           </Grid>
           <Grid item xs={12}>
             {(() => {
