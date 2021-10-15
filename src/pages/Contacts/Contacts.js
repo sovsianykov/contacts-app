@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useContacts } from "../../hooc/useContacts";
-import { Container, TextField, Typography } from "@mui/material";
+import {Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
 import { createStyles } from "@mui/styles";
 import ContactTable from "./ContactTable";
 import ToggleDataViewMode from "../../components/ToggleDataViewMode";
@@ -20,15 +20,24 @@ const useStyles = makeStyles((theme) => {
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(4),
     },
+    fieldGender : {
+      width: 100
+    }
   });
 });
 
-const filtersDefaultData = { fullname: "" };
-
+const filtersDefaultData = { fullname: "" , gender: "All"};
+//
 const filterByFullName = ({ first, last }, fullname ) =>
-  first.toLowerCase().includes(fullname.toLowerCase) ||
-  last.toLowerCase().includes(fullname.toLowerCase)
+  first?.toLowerCase().includes(fullname.toLowerCase()) ||
+     last?.toLowerCase().includes(fullname.toLowerCase())
 
+const filterByGender = (gender,filterGender) => {
+  if  (filterGender === "All" ) {
+    return true;
+  }
+  return gender === filterGender || gender === ""
+}
 
 
 const Contacts = () => {
@@ -44,7 +53,10 @@ const Contacts = () => {
     }));
   };
 
-
+  const filteredContacts = data&&data
+      .filter((c) => filterByFullName(c.name, filters.fullname))
+      .filter((c) => filterByGender(c.gender, filters.gender))
+  console.log("filteredContacts",filteredContacts)
   return (
     <Container className={classes.root}>
       <Box sx={{ flexGrow: 1 }}>
@@ -72,6 +84,21 @@ const Contacts = () => {
                 size="small"
                 onChange={handleChangeFilter}
               />
+              <FormControl className={classes.fieldGender} >
+                <InputLabel id="demo">Gender</InputLabel>
+                <Select
+                    size='small'
+                    id="demo"
+                    name="gender"
+                    value={filters.gender}
+                    label="Gender"
+                    onChange={handleChangeFilter}
+                >
+                  <MenuItem  value={'All'}>All</MenuItem>
+                  <MenuItem value={"male"}>male</MenuItem>
+                  <MenuItem value={"female"}>female</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
           </Grid>
           <Grid item xs={12}>
@@ -83,7 +110,7 @@ const Contacts = () => {
                 return <div> "Something vent wrong !" </div>;
               }
               if (dataViewMode === DATA_VIEW_MODES.TABLE) {
-                return <ContactTable data={data} />;
+                return <ContactTable data={filteredContacts} />;
               }
               if (dataViewMode === DATA_VIEW_MODES.GRID) {
                 return "grid";

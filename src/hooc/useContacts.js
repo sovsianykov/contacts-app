@@ -9,7 +9,7 @@ export function useContacts() {
     const getLoading = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("https://randomuser.me/api/?results=10");
+        const response = await fetch("https://randomuser.me/api/?results=200");
         const { results, error } = await response.json();
         if (error) throw new Error(error);
         setData(results);
