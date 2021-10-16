@@ -7,7 +7,8 @@ const useStyles = makeStyles((theme) => {
   return createStyles({
     root: {
       display: "flex",
-      padding: "3px 5px",
+      padding: "3px 3px",
+      maxWidth : "200px",
       letterSpacing: "0.2rem",
       alignItems: "center",
       fontWeight: 700,

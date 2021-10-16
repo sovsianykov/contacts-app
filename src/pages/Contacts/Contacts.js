@@ -10,6 +10,7 @@ import ToggleDataViewMode from "../../components/ToggleDataViewMode";
 import { DATA_VIEW_MODES } from "../../constants/constants";
 import { useDataViewMode } from "./useDataViewMod";
 import ContentFilters from "../../components/ContentFilters";
+import ContactsGrid from "./ContactsGrid";
 
 const useStyles = makeStyles((theme) => {
   return createStyles({
@@ -66,7 +67,7 @@ const Contacts = () => {
       .filter((c) => filterByGender(c.gender, filters.gender))
       .filter((c) => filterByNationality(c.nat, filters.nationality))
 
-  const clearFilters = useContacts(() =>  {
+  const clearFilters = useCallback(() =>  {
     setFilters(filtersDefaultData)
   },[])
 
@@ -102,7 +103,7 @@ const Contacts = () => {
                 return <ContactTable data={filteredContacts} />;
               }
               if (dataViewMode === DATA_VIEW_MODES.GRID) {
-                return "grid";
+                return <ContactsGrid data={filteredContacts}  />;
               }
             })()}
           </Grid>
