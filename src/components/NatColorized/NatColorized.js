@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import { Box } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import { NATIONALITIES_HUMANE_NAME } from "../../constants/nationality";
@@ -31,4 +31,4 @@ const NatColorized = ({ item }) => {
   );
 };
 
-export default NatColorized;
+export default memo(NatColorized);

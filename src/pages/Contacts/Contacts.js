@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useCallback, useState} from "react";
 import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => {
       marginBottom: theme.spacing(4),
     },
     fieldGender : {
-      width: 100
+      marginLeft: "100px",
+      width: 100,
     }
   });
 });
@@ -53,18 +54,22 @@ const Contacts = () => {
   const [dataViewMode, setDataViewMode] = useDataViewMode();
   const [filters, setFilters] = useState(filtersDefaultData);
 
-  const updateFilter = (name, value) => {
+  const updateFilter = useCallback((name, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
-  };
+  },[])
 
   const filteredContacts = data&&data
       .filter((c) => filterByFullName(c.name, filters.fullname))
       .filter((c) => filterByGender(c.gender, filters.gender))
       .filter((c) => filterByNationality(c.nat, filters.nationality))
-  console.log("filteredContacts",filteredContacts)
+
+  const clearFilters = useContacts(() =>  {
+    setFilters(filtersDefaultData)
+  },[])
+
   return (
     <Container className={classes.root}>
       <Box sx={{ flexGrow: 1 }}>
@@ -83,7 +88,7 @@ const Contacts = () => {
                 dataViewMode={dataViewMode}
               />
             </Box>
-           <ContentFilters filters={filters} updateFilter={updateFilter}/>
+           <ContentFilters filters={filters} updateFilter={updateFilter} clearFilters ={ clearFilters }/>
           </Grid>
           <Grid item xs={12}>
             {(() => {

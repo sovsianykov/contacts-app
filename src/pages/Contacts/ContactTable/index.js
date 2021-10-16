@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import {
@@ -87,4 +87,4 @@ const ContactTable = ({ data }) => {
   );
 };
 
-export default ContactTable;
+export default memo(ContactTable);

@@ -1,6 +1,7 @@
-import React from "react";
+import React, {memo, useCallback} from "react";
 import Box from "@mui/material/Box";
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -10,22 +11,39 @@ import {
 import { createStyles, makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import { NATIONALITIES_HUMANE_NAME } from "../../constants/nationality";
+import { ClearOutlined} from "@mui/icons-material";
 
 const useStyles = makeStyles(() => {
   return createStyles({
+     fieldContainer : {
+       width : "45%",
+       "& > * :not(:last-child)": {
+
+    }
+  },
+
     fieldGender: {
-      width: "200px",
+      width: "120px",
+    },
+    fieldNationality: {
+      width: "140px",
     },
   });
 });
 
-const ContentFilters = ({ filters, updateFilter }) => {
+const ContentFilters = ({ filters, updateFilter, clearFilters  }) => {
   const classes = useStyles();
-  const handleChangeFilter = (event) => {
+  const handleChangeFilter = useCallback((event) => {
     updateFilter(event.target.name, event.target.value);
-  };
+  },[updateFilter])
+
+  const handleClearClick = () => {
+    clearFilters()
+  }
+
   return (
-    <Box display="flex">
+    <Box display="flex" justifyContent='space-between'>
+    <Box display="flex" className={classes.fieldContainer} justifyContent='space-between' >
       <TextField
         name="fullname"
         label="Fullname"
@@ -35,7 +53,7 @@ const ContentFilters = ({ filters, updateFilter }) => {
         onChange={handleChangeFilter}
       />
       <FormControl className={classes.fieldGender}>
-        <InputLabel id="demo">Gender</InputLabel>
+        <InputLabel id="demo" >Gender</InputLabel>
         <Select
           size="small"
           id="demo"
@@ -49,7 +67,7 @@ const ContentFilters = ({ filters, updateFilter }) => {
           <MenuItem value={"female"}>female</MenuItem>
         </Select>
       </FormControl>
-      <FormControl className={classes.fieldGender}>
+      <FormControl className={classes.fieldNationality}>
         <InputLabel id="demos">Nationality</InputLabel>
         <Select
           size="small"
@@ -68,10 +86,19 @@ const ContentFilters = ({ filters, updateFilter }) => {
         </Select>
       </FormControl>
     </Box>
+      <Button
+      variant='container'
+      size='small'
+      startIcon={<ClearOutlined/>}
+       onClick={handleClearClick}
+      >
+
+        Clear</Button>
+    </Box>
   );
 };
 
-export default ContentFilters;
+export default memo(ContentFilters);
 
 ContentFilters.propTypes = {
   filters: PropTypes.object.isRequired,
