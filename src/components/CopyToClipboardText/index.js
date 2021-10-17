@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import { FileCopyOutlined } from "@mui/icons-material";
 import { createStyles, makeStyles } from "@mui/styles";
@@ -47,6 +46,8 @@ const CopyToClipboardText = ({ text }) => {
     copyToClipboard(text);
     setStatusCopy("copied");
   }, [copyToClipboard, text]);
+
+  console.log(state)
 
   return (
     <Tooltip title={tooltipTitle()} placement="top" arrow>
